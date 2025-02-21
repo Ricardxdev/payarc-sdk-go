@@ -3,8 +3,6 @@ package payarcsdk
 import (
 	"context"
 	"fmt"
-	"net/http"
-	"time"
 
 	"github.com/Ricardxdev/payarc-sdk-go/client"
 	"github.com/Ricardxdev/payarc-sdk-go/inputs"
@@ -41,6 +39,7 @@ type PayarcClientOptions struct {
 	ApiVersion   string
 	PayarcPrefix string
 	Token        string
+	HTTPClient   client.HTTPClient
 }
 
 func NewPayarcClient(ctx context.Context, options PayarcClientOptions) PayarcClient {
@@ -69,7 +68,7 @@ func NewClient(options PayarcClientOptions) *client.Client {
 		BaseURL:    options.BaseUrl,
 		Token:      options.Token,
 		Version:    options.Version,
-		HTTPClient: &http.Client{Timeout: 2 * time.Minute},
+		HTTPClient: options.HTTPClient,
 	}
 }
 
