@@ -135,7 +135,7 @@ type Charge struct {
 	VoidDescription             *string  `json:"void_description"`
 	ServerID                    *string  `json:"server_id"`
 	ExternalInvoiceID           *string  `json:"external_invoice_id"`
-	ExternalOrderID             *string  `json:"external_order_id"`
+	ExternalOrderID             *int     `json:"external_order_id"`
 	TsysResponseCode            string   `json:"tsys_response_code"`
 	HostResponseCode            string   `json:"host_response_code"`
 	HostResponseMessage         string   `json:"host_response_message"`

@@ -11,6 +11,7 @@ import (
 
 type PayarcClient interface {
 	GetCharges(page int64, pageLimit int64) (*outputs.ResponseCharges, error)
+	GetChargesByDate(startDate, endDate int64) ([]outputs.Charge, error)
 	GetCharge(chargeID string) (*outputs.ResponseCharge, error)
 	CreateCharge(input inputs.ChargeInput) (*outputs.CreateChargeResponse, error)
 	GetCustomer(customerId string) (*outputs.CustomerResponse, error)
@@ -109,6 +110,22 @@ func (p *PayarcClientImpl) GetCharges(page int64, pageLimit int64) (*outputs.Res
 	}
 
 	return response, nil
+}
+
+func (s *PayarcClientImpl) GetChargesByDate(startDate, endDate int64) ([]outputs.Charge, error) {
+	var err error
+	var charges *outputs.ResponseCharges
+	if charges, err = s.GetCharges(1, 1000000000); err != nil {
+		return nil, err
+	}
+
+	filteredCharges := make([]outputs.Charge, 0)
+	for _, charge := range charges.Data {
+		if charge.CreatedAt >= startDate && charge.CreatedAt <= endDate {
+			filteredCharges = append(filteredCharges, charge)
+		}
+	}
+	return filteredCharges, nil
 }
 
 func (p *PayarcClientImpl) CreateCharge(input inputs.ChargeInput) (*outputs.CreateChargeResponse, error) {
