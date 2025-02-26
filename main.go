@@ -18,6 +18,7 @@ type PayarcClient interface {
 	GetCustomers(page, pageLimit int) (*outputs.CustomersResponse, error)
 	CreateCustomer(input inputs.CreateCustomerDTO) (*outputs.CustomerResponse, error)
 	GetCards(page, pageLimit int) (*outputs.CardsResponse, error)
+	GetCustomerCards(customerId string) (*outputs.CardsResponse, error)
 	GetCard(cardId string) (*outputs.CardResponse, error)
 	CreateCard(input inputs.CreateCardDTO) (*outputs.Card, error)
 	CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error)
@@ -191,6 +192,18 @@ func (p *PayarcClientImpl) GetCard(cardId string) (*outputs.CardResponse, error)
 	if err := p.client.Get(path, nil, res, nil); err != nil {
 		return nil, err
 	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) GetCustomerCards(customerId string) (*outputs.CardsResponse, error) {
+	customer, err := p.GetCustomer(customerId)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &outputs.CardsResponse{}
+	res.Cards = customer.Data.Card.Data
+
 	return res, nil
 }
 
