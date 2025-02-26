@@ -8,7 +8,6 @@ import (
 	"time"
 
 	payarcsdk "github.com/Ricardxdev/payarc-sdk-go/pkg"
-	payarcin "github.com/Ricardxdev/payarc-sdk-go/pkg/inputs"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 		HTTPClient:   &http.Client{Timeout: 2 * time.Minute},
 	})
 
-	//payarc.SetDefaultCard("jAPDKVpNjMp4VNxn", "P1Lv0Nmm9vP205MN")
+	//payarc.DeleteCard("jAPDKVpNjMp4VNxn", "P1Lv0Nmm9vP205MN")
 
 	customers, err := payarc.GetCustomers(1, 10)
 	if err != nil {
@@ -31,15 +30,15 @@ func main() {
 	for _, customer := range customers.Data {
 		if len(customer.Card.Data) != 0 {
 			fmt.Println(customer.CustomerID)
-			_, err := payarc.UpdateCard("P1Lv0Nmm9vP205MN", payarcin.UpdateCardDTO{
-				CardHolderName: "Ricardo Martinez",
-				ExpMonth:       12,
-				ExpYear:        2025,
-			})
+			// _, err := payarc.UpdateCard("P1Lv0Nmm9vP205MN", payarcin.UpdateCardDTO{
+			// 	CardHolderName: "Ricardo Martinez",
+			// 	ExpMonth:       12,
+			// 	ExpYear:        2025,
+			// })
 
-			if err != nil {
-				panic(err)
-			}
+			// if err != nil {
+			// 	panic(err)
+			// }
 
 			fmt.Println(">>>")
 			cards, err := payarc.GetCustomerCards(customer.CustomerID)
