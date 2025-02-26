@@ -23,7 +23,7 @@ type RefundResponse struct {
 type Refund struct {
 	Object                   string         `json:"object"`
 	ID                       string         `json:"id"`
-	RefundAmount             string         `json:"refund_amount"`
+	RefundAmount             int            `json:"refund_amount"`
 	Currency                 extra.Currency `json:"currency"`
 	Status                   RefundStatus   `json:"status"`
 	Reason                   RefundReason   `json:"reason"`
