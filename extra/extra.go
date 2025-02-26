@@ -21,6 +21,13 @@ var (
 	True  Boolean = 1
 )
 
+func (b Boolean) FromBool(input bool) Boolean {
+	if b.AsBool() {
+		return True
+	}
+	return False
+}
+
 func (b Boolean) AsBool() bool {
 	return b == True
 }
