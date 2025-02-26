@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Ricardxdev/payarc-sdk-go/utils"
+	"github.com/Ricardxdev/payarc-sdk-go/pkg/utils"
 )
 
 type HTTPClient interface {

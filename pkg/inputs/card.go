@@ -1,6 +1,6 @@
 package inputs
 
-import "github.com/Ricardxdev/payarc-sdk-go/extra"
+import "github.com/Ricardxdev/payarc-sdk-go/pkg/extra"
 
 type CreateCardDTO struct {
 	CustomerID string `json:"customer_id"`

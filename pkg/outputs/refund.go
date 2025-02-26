@@ -1,6 +1,6 @@
 package outputs
 
-import "github.com/Ricardxdev/payarc-sdk-go/extra"
+import "github.com/Ricardxdev/payarc-sdk-go/pkg/extra"
 
 type RefundReason string
 

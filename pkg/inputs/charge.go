@@ -1,6 +1,6 @@
 package inputs
 
-import "github.com/Ricardxdev/payarc-sdk-go/extra"
+import "github.com/Ricardxdev/payarc-sdk-go/pkg/extra"
 
 type ChargeInput struct {
 	Amount                   int64          `json:"amount" form:"amount"`

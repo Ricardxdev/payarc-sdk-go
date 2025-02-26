@@ -2,10 +2,11 @@ package outputs
 
 import (
 	"fmt"
+	"reflect"
 
 	"encoding/json"
 
-	"github.com/Ricardxdev/payarc-sdk-go/extra"
+	"github.com/Ricardxdev/payarc-sdk-go/pkg/extra"
 )
 
 type CardSource string
@@ -177,24 +178,39 @@ func (c *Card) UnmarshalJSON(data []byte) error {
 		c.IsVerified = dummyBool.FromBool(isVerified)
 	} else if isVerified, ok := aux.IsVerified.(extra.Boolean); ok {
 		c.IsVerified = isVerified
+	} else if isVerified, ok := aux.IsVerified.(float64); ok {
+		c.IsVerified = dummyBool.FromBool(isVerified != 0)
+	} else {
+		fmt.Println("Hijos de puta", aux.IsVerified, fmt.Sprintf("%T", aux.IsVerified), reflect.TypeOf(aux.IsVerified).Kind() == reflect.Ptr)
 	}
 	if isDefault, ok := aux.IsDefault.(bool); ok {
 		c.IsDefault = dummyBool.FromBool(isDefault)
 	} else if isDefault, ok := aux.IsDefault.(extra.Boolean); ok {
 		c.IsDefault = isDefault
+	} else if isDefault, ok := aux.IsDefault.(float64); ok {
+		c.IsDefault = dummyBool.FromBool(isDefault != 0)
+	} else {
+		fmt.Println("Hijos de puta", aux.IsDefault, fmt.Sprintf("%T", aux.IsDefault), reflect.TypeOf(aux.IsDefault).Kind() == reflect.Ptr)
 	}
 
 	if addressCheckPassed, ok := aux.AddressCheckPassed.(bool); ok {
 		c.AddressCheckPassed = dummyBool.FromBool(addressCheckPassed)
 	} else if addressCheckPassed, ok := aux.AddressCheckPassed.(extra.Boolean); ok {
 		c.AddressCheckPassed = addressCheckPassed
+	} else if addressCheckPassed, ok := aux.AddressCheckPassed.(float64); ok {
+		c.AddressCheckPassed = dummyBool.FromBool(addressCheckPassed != 0)
+	} else {
+		fmt.Println("Hijos de puta", aux.AddressCheckPassed, fmt.Sprintf("%T", aux.AddressCheckPassed), reflect.TypeOf(aux.AddressCheckPassed).Kind() == reflect.Ptr)
 	}
 
 	if zipCheckPassed, ok := aux.ZipCheckPassed.(bool); ok {
 		c.ZipCheckPassed = dummyBool.FromBool(zipCheckPassed)
 	} else if zipCheckPassed, ok := aux.ZipCheckPassed.(extra.Boolean); ok {
 		c.ZipCheckPassed = zipCheckPassed
+	} else if zipCheckPassed, ok := aux.ZipCheckPassed.(float64); ok {
+		c.ZipCheckPassed = dummyBool.FromBool(zipCheckPassed != 0)
+	} else {
+		fmt.Println("Hijos de puta", aux.ZipCheckPassed, fmt.Sprintf("%T", aux.ZipCheckPassed), reflect.TypeOf(aux.ZipCheckPassed).Kind() == reflect.Ptr)
 	}
-
 	return nil
 }
