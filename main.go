@@ -21,6 +21,7 @@ type PayarcClient interface {
 	GetCustomerCards(customerId string) (*outputs.CardsResponse, error)
 	GetCard(cardId string) (*outputs.CardResponse, error)
 	CreateCard(input inputs.CreateCardDTO) (*outputs.Card, error)
+	SetDefaultCard(customerId, cardId string) (*outputs.CustomerResponse, error)
 	CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error)
 }
 
@@ -268,6 +269,19 @@ func (p *PayarcClientImpl) CreateCard(input inputs.CreateCardDTO) (*outputs.Card
 		}
 	}
 	return card, nil
+}
+
+func (p *PayarcClientImpl) SetDefaultCard(customerId, cardId string) (*outputs.CustomerResponse, error) {
+	path := fmt.Sprintf("%s/%s", p.customersPath, customerId)
+	payload := &inputs.UpdateCustomerDTO{
+		DefaultCardID: cardId,
+	}
+	response := &outputs.CustomerResponse{}
+	err := p.client.PatchJSON(path, payload, response)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
 }
 
 func (p *PayarcClientImpl) CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error) {
