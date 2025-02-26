@@ -22,3 +22,15 @@ type CreateTokenDTO struct {
 	Country        string        `json:"country"`
 	AuthorizeCard  extra.Boolean `json:"authorize_card"`
 }
+
+type UpdateCardDTO struct {
+	ExpMonth       int    `json:"exp_month"`
+	ExpYear        int    `json:"exp_year"`
+	CardHolderName string `json:"name"`
+	AddressLine1   string `json:"address_line1"`
+	AddressLine2   string `json:"address_line2"`
+	City           string `json:"city"`
+	StateCode      string `json:"state_code"`
+	ZIPCode        int    `json:"zip"`
+	CountryCode    string `json:"country_code"`
+}
