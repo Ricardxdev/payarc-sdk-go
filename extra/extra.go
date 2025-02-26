@@ -22,7 +22,7 @@ var (
 )
 
 func (b Boolean) FromBool(input bool) Boolean {
-	if b.AsBool() {
+	if input {
 		return True
 	}
 	return False
