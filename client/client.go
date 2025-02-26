@@ -151,6 +151,34 @@ func (c *Client) PatchJSON(path string, body interface{}, response interface{}) 
 	return c.Patch(path, encodedBody, response, headers)
 }
 
+func (c *Client) Delete(path string, body *strings.Reader, response interface{}, headers map[string]string) error {
+	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s%s", c.BaseURL, path), nil)
+	if err != nil {
+		return err
+	}
+
+	for header := range headers {
+		req.Header.Set(header, headers[header])
+	}
+
+	return c.sendRequest(req, response)
+}
+
+func (c *Client) DeleteJSON(path string, body interface{}, response interface{}) error {
+	bodyJson, err := json.Marshal(body)
+	if err != nil {
+		return err
+	}
+	encodedBody := strings.NewReader(string(bodyJson))
+
+	headers := map[string]string{
+		"Authorization": fmt.Sprintf("Bearer %s", c.Token),
+		"Accept":        MIMEJSON.String(),
+		"Content-Type":  MIMEJSON.String(),
+	}
+	return c.Delete(path, encodedBody, response, headers)
+}
+
 func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
