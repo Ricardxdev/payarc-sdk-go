@@ -7,7 +7,7 @@ type Customer struct {
 	Email             string  `json:"email"`               //
 	Description       string  `json:"description"`         //
 	PaymentOverdue    *int    `json:"payment_overdue"`     //
-	SendEmailAddress  string  `json:"send_email_address"`  //
+	SendEmailAddress  *string `json:"send_email_address"`  //
 	CCEmailAddress    *string `json:"cc_email_address"`    //
 	SourceID          *string `json:"source_id"`           //
 	Address1          *string `json:"address_1"`           //
@@ -18,9 +18,9 @@ type Customer struct {
 	Phone             *string `json:"phone"`               //
 	Country           *string `json:"country"`             //
 	CreatedAt         int64   `json:"created_at"`          //
-	UpdatedAt         *int64  `json:"updated_at"`          //
+	UpdatedAt         int64   `json:"updated_at"`          //
 	ReadableCreatedAt string  `json:"readable_created_at"` //
-	ReadableUpdatedAt *string `json:"readable_updated_at"` //
+	ReadableUpdatedAt string  `json:"readable_updated_at"` //
 	InvoicePrefix     string  `json:"invoice_prefix"`      //
 	Card              struct {
 		Data []Card `json:"data"`

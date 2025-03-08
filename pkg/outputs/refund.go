@@ -28,8 +28,8 @@ type Refund struct {
 	Status                   RefundStatus   `json:"status"`
 	Reason                   RefundReason   `json:"reason"`
 	Description              string         `json:"description"`
-	Email                    any            `json:"email"`
-	ReceiptPhone             any            `json:"receipt_phone"`
+	Email                    *string        `json:"email"`
+	ReceiptPhone             *string        `json:"receipt_phone"`
 	ChargeID                 string         `json:"charge_id"`
 	CreatedAt                int            `json:"created_at"`
 	UpdatedAt                int            `json:"updated_at"`
