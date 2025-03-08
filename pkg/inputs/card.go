@@ -10,9 +10,9 @@ type CreateCardDTO struct {
 type CreateTokenDTO struct {
 	CardSource     string        `json:"card_source,omitempty"`
 	CardNumber     string        `json:"card_number,omitempty"`
-	ExpMonth       int           `json:"exp_month,omitempty"`
-	ExpYear        int           `json:"exp_year,omitempty"`
-	CVV            int           `json:"cvv,omitempty"`
+	ExpMonth       string        `json:"exp_month,omitempty"`
+	ExpYear        string        `json:"exp_year,omitempty"`
+	CVV            string        `json:"cvv,omitempty"`
 	CardHolderName string        `json:"card_holder_name,omitempty"`
 	AddressLine1   string        `json:"address_line1,omitempty"`
 	AddressLine2   string        `json:"address_line2,omitempty"`
@@ -24,13 +24,13 @@ type CreateTokenDTO struct {
 }
 
 type UpdateCardDTO struct {
-	ExpMonth       int    `json:"exp_month,omitempty"`
-	ExpYear        int    `json:"exp_year,omitempty"`
+	ExpMonth       string `json:"exp_month,omitempty"`
+	ExpYear        string `json:"exp_year,omitempty"`
 	CardHolderName string `json:"name,omitempty"`
 	AddressLine1   string `json:"address_line1,omitempty"`
 	AddressLine2   string `json:"address_line2,omitempty"`
 	City           string `json:"city,omitempty"`
 	StateCode      string `json:"state_code,omitempty"`
-	ZIPCode        int    `json:"zip,omitempty"`
+	ZIPCode        string `json:"zip,omitempty"`
 	CountryCode    string `json:"country_code,omitempty"`
 }
