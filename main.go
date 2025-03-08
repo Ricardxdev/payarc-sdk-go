@@ -21,7 +21,7 @@ func main() {
 	})
 
 	fmt.Println("Customer deleted successfully")
-	customer, err := payarc.GetCustomer("DPpKjVKDAMKxVnMN")
+	customer, err := payarc.GetCustomer("DPpKjVKDAMKxVnMN ")
 	if err != nil {
 		fmt.Println("Error getting customer:", err)
 		return
