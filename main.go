@@ -20,35 +20,11 @@ func main() {
 		HTTPClient:   &http.Client{Timeout: 2 * time.Minute},
 	})
 
-	//payarc.DeleteCard("jAPDKVpNjMp4VNxn", "P1Lv0Nmm9vP205MN")
-
-	customers, err := payarc.GetCustomers(1, 10)
+	fmt.Println("Customer deleted successfully")
+	customer, err := payarc.GetCustomer("DPpKjVKDAMKxVnMN")
 	if err != nil {
-		panic(err)
+		fmt.Println("Error getting customer:", err)
+		return
 	}
-
-	for _, customer := range customers.Data {
-		if len(customer.Card.Data) != 0 {
-			fmt.Println(customer.CustomerID)
-			// _, err := payarc.UpdateCard("P1Lv0Nmm9vP205MN", payarcin.UpdateCardDTO{
-			// 	CardHolderName: "Ricardo Martinez",
-			// 	ExpMonth:       12,
-			// 	ExpYear:        2025,
-			// })
-
-			// if err != nil {
-			// 	panic(err)
-			// }
-
-			fmt.Println(">>>")
-			cards, err := payarc.GetCustomerCards(customer.CustomerID)
-			if err != nil {
-				panic(err)
-			}
-			for _, card := range cards.Cards {
-				fmt.Println(card.ID, card.IsDefault)
-			}
-			break
-		}
-	}
+	fmt.Println("Customer details:", customer)
 }
