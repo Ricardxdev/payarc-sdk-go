@@ -33,6 +33,6 @@ type Refund struct {
 	ChargeID                 string         `json:"charge_id"`
 	CreatedAt                int            `json:"created_at"`
 	UpdatedAt                int            `json:"updated_at"`
-	DoNotSendEmailToCustomer extra.Boolean  `json:"do_not_send_email_to_customer"`
-	DoNotSendSmsToCustomer   extra.Boolean  `json:"do_not_send_sms_to_customer"`
+	DoNotSendEmailToCustomer int            `json:"do_not_send_email_to_customer"`
+	DoNotSendSmsToCustomer   int            `json:"do_not_send_sms_to_customer"`
 }

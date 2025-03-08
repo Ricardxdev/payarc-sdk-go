@@ -23,16 +23,16 @@ type ChargeResult struct {
 	PayArcFees               int                   `json:"payarc_fees"`
 	NetAmount                int                   `json:"net_amount"`
 	Surcharge                int                   `json:"surcharge"`
-	Captured                 extra.Boolean         `json:"captured"`
-	IsRefunded               extra.Boolean         `json:"is_refunded"`
+	Captured                 int                   `json:"captured"`
+	IsRefunded               int                   `json:"is_refunded"`
 	Status                   extra.ChargeStatus    `json:"status"`
 	UnderReview              bool                  `json:"under_review"`
 	CardLevel                extra.ChargeCardLevel `json:"card_level"`
 	AuthCode                 string                `json:"auth_code"`
 	FailureCode              string                `json:"failure_code"`
 	FailureMessage           string                `json:"failure_message"`
-	DoNotSendEmailToCustomer extra.Boolean         `json:"do_not_send_email_to_customer"`
-	DoNotSendSmsToCustomer   extra.Boolean         `json:"do_not_send_sms_to_customer"`
+	DoNotSendEmailToCustomer int                   `json:"do_not_send_email_to_customer"`
+	DoNotSendSmsToCustomer   int                   `json:"do_not_send_sms_to_customer"`
 	KountDetails             string                `json:"kount_details"`
 	KountStatus              string                `json:"kount_status"`
 	TsysResponseCode         string                `json:"tsys_response_code"`
@@ -68,8 +68,8 @@ type Charge struct {
 	Type                        string            `json:"type"`
 	CustomerEmail               *string           `json:"customer_email"`
 	NetAmount                   int               `json:"net_amount"`
-	Captured                    extra.Boolean     `json:"captured"`
-	IsRefunded                  extra.Boolean     `json:"is_refunded"`
+	Captured                    int               `json:"captured"`
+	IsRefunded                  int               `json:"is_refunded"`
 	Status                      string            `json:"status"`
 	AuthCode                    *string           `json:"auth_code"`
 	FailureCode                 *string           `json:"failure_code"`

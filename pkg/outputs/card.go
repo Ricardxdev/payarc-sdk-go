@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	"encoding/json"
-
-	"github.com/Ricardxdev/payarc-sdk-go/pkg/extra"
 )
 
 type CardSource string
@@ -46,70 +44,70 @@ type CardResponse struct {
 }
 
 type Card struct {
-	Object             string        `json:"object"`
-	ID                 string        `json:"id"`
-	CustomerID         *string       `json:"customer_id"`
-	Brand              CardBrand     `json:"brand"`
-	First6Digit        string        `json:"first6digit"`
-	Last4Digit         string        `json:"last4digit"`
-	ExpMonth           string        `json:"exp_month"`
-	ExpYear            string        `json:"exp_year"`
-	Fingerprint        string        `json:"fingerprint"`
-	CardSource         CardSource    `json:"card_source"`
-	IsVerified         extra.Boolean `json:"is_verified"`
-	IsDefault          extra.Boolean `json:"is_default"`
-	HolderName         *string       `json:"card_holder_name"`
-	Address1           *string       `json:"address1,omitempty"`
-	Address2           *string       `json:"address2,omitempty"`
-	State              *string       `json:"state,omitempty"`
-	City               *string       `json:"city,omitempty"`
-	Zip                *string       `json:"zip,omitempty"`
-	Country            *string       `json:"country,omitempty"`
-	AvsStatus          *string       `json:"avs_status,omitempty"`
-	CvcStatus          *string       `json:"cvc_status,omitempty"`
-	AddressCheckPassed extra.Boolean `json:"address_check_passed"`
-	ZipCheckPassed     extra.Boolean `json:"zip_check_passed"`
-	CardType           string        `json:"card_type"`
-	BinCountry         string        `json:"bin_country"`
-	BankName           *string       `json:"bank_name,omitempty"`
-	BankWebsite        *string       `json:"bank_website,omitempty"`
-	BankPhone          *string       `json:"bank_phone,omitempty"`
-	CreatedAt          int64         `json:"created_at"`
-	UpdatedAt          int64         `json:"updated_at"`
+	Object             string     `json:"object"`
+	ID                 string     `json:"id"`
+	CustomerID         *string    `json:"customer_id"`
+	Brand              CardBrand  `json:"brand"`
+	First6Digit        string     `json:"first6digit"`
+	Last4Digit         string     `json:"last4digit"`
+	ExpMonth           string     `json:"exp_month"`
+	ExpYear            string     `json:"exp_year"`
+	Fingerprint        string     `json:"fingerprint"`
+	CardSource         CardSource `json:"card_source"`
+	IsVerified         int        `json:"is_verified"`
+	IsDefault          int        `json:"is_default"`
+	HolderName         *string    `json:"card_holder_name"`
+	Address1           *string    `json:"address1,omitempty"`
+	Address2           *string    `json:"address2,omitempty"`
+	State              *string    `json:"state,omitempty"`
+	City               *string    `json:"city,omitempty"`
+	Zip                *string    `json:"zip,omitempty"`
+	Country            *string    `json:"country,omitempty"`
+	AvsStatus          *string    `json:"avs_status,omitempty"`
+	CvcStatus          *string    `json:"cvc_status,omitempty"`
+	AddressCheckPassed int        `json:"address_check_passed"`
+	ZipCheckPassed     int        `json:"zip_check_passed"`
+	CardType           string     `json:"card_type"`
+	BinCountry         string     `json:"bin_country"`
+	BankName           *string    `json:"bank_name,omitempty"`
+	BankWebsite        *string    `json:"bank_website,omitempty"`
+	BankPhone          *string    `json:"bank_phone,omitempty"`
+	CreatedAt          int64      `json:"created_at"`
+	UpdatedAt          int64      `json:"updated_at"`
 }
 
 func (c *Card) UnmarshalJSON(data []byte) error {
 	aux := &struct {
-		Object             string        `json:"object"`
-		ID                 string        `json:"id"`
-		CustomerID         string        `json:"customer_id"`
-		Brand              CardBrand     `json:"brand"`
-		First6Digit        interface{}   `json:"first6digit"` // float64
-		Last4Digit         interface{}   `json:"last4digit"`
-		ExpMonth           interface{}   `json:"exp_month"`
-		ExpYear            interface{}   `json:"exp_year"`
-		Fingerprint        string        `json:"fingerprint"`
-		CardSource         CardSource    `json:"card_source"`
-		IsVerified         extra.Boolean `json:"is_verified"`
-		IsDefault          extra.Boolean `json:"is_default"`
-		HolderName         string        `json:"card_holder_name"`
-		Address1           *string       `json:"address1"`
-		Address2           *string       `json:"address2"`
-		State              *string       `json:"state"`
-		City               *string       `json:"city"`
-		Zip                *string       `json:"zip"`
-		Country            *string       `json:"country"`
-		AvsStatus          string        `json:"avs_status"`
-		CvcStatus          string        `json:"cvc_status"`
-		AddressCheckPassed extra.Boolean `json:"address_check_passed"`
-		ZipCheckPassed     extra.Boolean `json:"zip_check_passed"`
-		CardType           string        `json:"card_type"`
-		BinCountry         string        `json:"bin_country"`
-		BankName           *string       `json:"bank_name"`
-		BankWebsite        *string       `json:"bank_website"`
-		BankPhone          *string       `json:"bank_phone"`
-		CreatedAt          int64         `json:"created_at"`
-		UpdatedAt          int64         `json:"updated_at"`
+		Object             string      `json:"object"`
+		ID                 string      `json:"id"`
+		CustomerID         string      `json:"customer_id"`
+		Brand              CardBrand   `json:"brand"`
+		First6Digit        interface{} `json:"first6digit"` // float64
+		Last4Digit         interface{} `json:"last4digit"`
+		ExpMonth           interface{} `json:"exp_month"`
+		ExpYear            interface{} `json:"exp_year"`
+		Fingerprint        string      `json:"fingerprint"`
+		CardSource         CardSource  `json:"card_source"`
+		IsVerified         int         `json:"is_verified"`
+		IsDefault          int         `json:"is_default"`
+		HolderName         string      `json:"card_holder_name"`
+		Address1           *string     `json:"address1"`
+		Address2           *string     `json:"address2"`
+		State              *string     `json:"state"`
+		City               *string     `json:"city"`
+		Zip                *string     `json:"zip"`
+		Country            *string     `json:"country"`
+		AvsStatus          string      `json:"avs_status"`
+		CvcStatus          string      `json:"cvc_status"`
+		AddressCheckPassed int         `json:"address_check_passed"`
+		ZipCheckPassed     int         `json:"zip_check_passed"`
+		CardType           string      `json:"card_type"`
+		BinCountry         string      `json:"bin_country"`
+		BankName           *string     `json:"bank_name"`
+		BankWebsite        *string     `json:"bank_website"`
+		BankPhone          *string     `json:"bank_phone"`
+		CreatedAt          int64       `json:"created_at"`
+		UpdatedAt          int64       `json:"updated_at"`
 	}{}
 
 	if err := json.Unmarshal(data, aux); err != nil {
