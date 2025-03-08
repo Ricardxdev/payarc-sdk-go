@@ -24,7 +24,7 @@ type PayarcClient interface {
 	GetCard(cardId string) (*outputs.CardResponse, error)
 	CreateCard(input inputs.CreateCardDTO) (*outputs.Card, error)
 	UpdateCard(cardId string, input inputs.UpdateCardDTO) error
-	DeleteCard(customerId, cardId string) (*outputs.CardResponse, error)
+	DeleteCard(customerId, cardId string) error
 	SetDefaultCard(customerId, cardId string) (*outputs.CustomerResponse, error)
 	CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error)
 }
@@ -304,14 +304,13 @@ func (p *PayarcClientImpl) UpdateCard(cardId string, input inputs.UpdateCardDTO)
 	return err
 }
 
-func (p *PayarcClientImpl) DeleteCard(customerId, cardId string) (*outputs.CardResponse, error) {
-	path := fmt.Sprintf("%s/%s/cards/%s", p.customersPath, customerId, cardId)
-	response := &outputs.CardResponse{}
-	err := p.client.DeleteJSON(path, nil, response)
+func (p *PayarcClientImpl) DeleteCard(customerId, cardId string) error {
+	path := fmt.Sprintf("customers/%s/cards/%s", customerId, cardId)
+	err := p.client.DeleteJSON(path, nil, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return response, nil
+	return err
 }
 
 func (p *PayarcClientImpl) SetDefaultCard(customerId, cardId string) (*outputs.CustomerResponse, error) {
