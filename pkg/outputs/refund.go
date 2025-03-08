@@ -42,6 +42,9 @@ type Refund struct {
 }
 
 func (r *Refund) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" || string(data) == "" {
+		return nil
+	}
 	aux := &struct {
 		Object                   string         `json:"object"`
 		ID                       string         `json:"id"`

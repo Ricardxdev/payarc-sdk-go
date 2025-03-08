@@ -166,6 +166,9 @@ type TerminalRegister struct {
 }
 
 func (c *Charge) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" || string(data) == "" {
+		return nil
+	}
 	aux := &struct {
 		Object                      string            `json:"object"`
 		ID                          string            `json:"id"`
@@ -355,6 +358,10 @@ func (c *Charge) UnmarshalJSON(data []byte) error {
 }
 
 func (c *ChargeResult) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" || string(data) == "" {
+		return nil
+	}
+
 	aux := &struct {
 		Object                   string                `json:"object"`
 		ID                       string                `json:"id"`
