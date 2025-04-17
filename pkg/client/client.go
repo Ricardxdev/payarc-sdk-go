@@ -192,6 +192,13 @@ func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 			return fmt.Errorf("error reading POST request body from %s: %v", req.URL, err)
 		}
 
+		var temp map[string]interface{}
+		if err = json.Unmarshal(content, &temp); err == nil {
+			if message, ok := temp["message"]; ok {
+				return fmt.Errorf("%s", message)
+			}
+		}
+
 		return fmt.Errorf("unexpected response with status: %d, message: %s", resp.StatusCode, content)
 	}
 
