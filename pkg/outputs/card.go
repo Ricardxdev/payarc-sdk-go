@@ -31,8 +31,8 @@ type CardBrand string
 var (
 	CardBrandVisa            CardBrand = "V"
 	CardBrandMastercard      CardBrand = "M"
-	CardBrandDiscover        CardBrand = "R"
-	CardBrandAmericanExpress CardBrand = "X"
+	CardBrandDiscover        CardBrand = "D"
+	CardBrandAmericanExpress CardBrand = "A"
 )
 
 type CardsResponse struct {
