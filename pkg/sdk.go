@@ -27,6 +27,7 @@ type PayarcClient interface {
 	DeleteCard(customerId, cardId string) error
 	SetDefaultCard(customerId, cardId string) (*outputs.CustomerResponse, error)
 	CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error)
+	CreateApplePayToken(token string) (*outputs.TokenResponse, error)
 }
 
 type PayarcClientImpl struct {
@@ -330,6 +331,15 @@ func (p *PayarcClientImpl) SetDefaultCard(customerId, cardId string) (*outputs.C
 func (p *PayarcClientImpl) CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error) {
 	response := &outputs.TokenResponse{}
 	err := p.client.PostJSON(p.tokensPath, input, response)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (p *PayarcClientImpl) CreateApplePayToken(token string) (*outputs.TokenResponse, error) {
+	response := &outputs.TokenResponse{}
+	err := p.client.PostJSON(fmt.Sprintf("%s/%s", p.tokensPath, "apple-pay"), map[string]string{"apple_encrypted_data": token}, response)
 	if err != nil {
 		return nil, err
 	}
