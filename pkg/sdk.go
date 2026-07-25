@@ -28,6 +28,7 @@ type PayarcClient interface {
 	SetDefaultCard(customerId, cardId string) (*outputs.CustomerResponse, error)
 	CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error)
 	CreateApplePayToken(token string) (*outputs.TokenResponse, error)
+	CreateCardFromToken(input outputs.Token) (*outputs.Card, error)
 }
 
 type PayarcClientImpl struct {
@@ -344,4 +345,28 @@ func (p *PayarcClientImpl) CreateApplePayToken(token string) (*outputs.TokenResp
 		return nil, err
 	}
 	return response, nil
+}
+
+func (p *PayarcClientImpl) CreateCardFromToken(input outputs.Token) (*outputs.Card, error) {
+	// Create card from token to customer
+	response := &outputs.CustomerResponse{}
+	path := fmt.Sprintf("%s/%s", p.customersPath, *input.Card.Data.CustomerID)
+	err := p.client.PatchJSON(path, struct {
+		TokenID string `json:"token_id"`
+	}{
+		TokenID: input.ID,
+	}, response)
+	if err != nil {
+		return nil, err
+	}
+
+	// Extract Card from Customer
+	card := &outputs.Card{}
+	for _, c := range response.Data.Card.Data {
+		if c.Last4Digit == input.Card.Data.Last4Digit {
+			*card = c
+			break
+		}
+	}
+	return card, nil
 }
