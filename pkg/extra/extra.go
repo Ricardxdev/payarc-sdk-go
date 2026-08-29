@@ -2,6 +2,7 @@ package extra
 
 import (
 	"encoding/json"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -58,6 +59,94 @@ var (
 type Currency string
 
 var CurrencyUSD Currency = "usd"
+
+// FlexInt is an integer that can be unmarshaled from a JSON number or a
+// numeric JSON string. The PayArc API is inconsistent with some numeric
+// fields (e.g. trial_period_days, amount on plans), returning them as
+// strings in some endpoints and as numbers in others.
+type FlexInt int64
+
+func (f *FlexInt) UnmarshalJSON(data []byte) error {
+	str := strings.Trim(string(data), "\"")
+	if str == "" || str == "null" {
+		return nil
+	}
+
+	n, err := strconv.ParseInt(str, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	*f = FlexInt(n)
+	return nil
+}
+
+func (f FlexInt) Int64() int64 {
+	return int64(f)
+}
+
+func (f FlexInt) String() string {
+	return strconv.FormatInt(int64(f), 10)
+}
+
+// PlanType represents the type of a plan.
+type PlanType string
+
+var (
+	PlanTypePhysical PlanType = "physical"
+	PlanTypeDigital  PlanType = "digital"
+)
+
+// PlanInterval represents the unit of interval for billing a plan.
+type PlanInterval string
+
+var (
+	PlanIntervalDay   PlanInterval = "day"
+	PlanIntervalMonth PlanInterval = "month"
+	PlanIntervalWeek  PlanInterval = "week"
+	PlanIntervalYear  PlanInterval = "year"
+)
+
+// CouponDuration represents the duration for which subscription invoices
+// are discounted from the time a coupon is redeemed or applied.
+type CouponDuration string
+
+var (
+	CouponDurationOnce      CouponDuration = "once"
+	CouponDurationRepeating CouponDuration = "repeating"
+	CouponDurationForever   CouponDuration = "forever"
+)
+
+// SubscriptionStatus represents the status of a subscription.
+type SubscriptionStatus string
+
+var (
+	SubscriptionStatusActive    SubscriptionStatus = "active"
+	SubscriptionStatusTrial     SubscriptionStatus = "trial"
+	SubscriptionStatusPending   SubscriptionStatus = "pending"
+	SubscriptionStatusPassedDue SubscriptionStatus = "passed_due"
+	SubscriptionStatusPaused    SubscriptionStatus = "paused"
+	SubscriptionStatusUnpaid    SubscriptionStatus = "unpaid"
+	SubscriptionStatusCanceled  SubscriptionStatus = "canceled"
+)
+
+// PauseUnit represents the unit used to pause a subscription.
+type PauseUnit string
+
+var (
+	PauseUnitDays   PauseUnit = "days"
+	PauseUnitWeeks  PauseUnit = "weeks"
+	PauseUnitMonths PauseUnit = "months"
+	PauseUnitYears  PauseUnit = "years"
+)
+
+// SortOrder represents the direction used to sort list results.
+type SortOrder string
+
+var (
+	SortOrderAsc  SortOrder = "asc"
+	SortOrderDesc SortOrder = "desc"
+)
 
 type DateTime struct {
 	time.Time

@@ -2,11 +2,13 @@ package payarcsdk
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Ricardxdev/payarc-sdk-go/pkg/client"
 	"github.com/Ricardxdev/payarc-sdk-go/pkg/inputs"
 	"github.com/Ricardxdev/payarc-sdk-go/pkg/outputs"
+	"github.com/Ricardxdev/payarc-sdk-go/pkg/utils"
 )
 
 type PayarcClient interface {
@@ -29,17 +31,39 @@ type PayarcClient interface {
 	CreateToken(input inputs.CreateTokenDTO) (*outputs.TokenResponse, error)
 	CreateApplePayToken(token string) (*outputs.TokenResponse, error)
 	CreateCardFromToken(input outputs.Token) (*outputs.Card, error)
+	GetPlans(page, pageLimit int) (*outputs.PlansResponse, error)
+	GetPlan(planId string) (*outputs.PlanResponse, error)
+	CreatePlan(input inputs.CreatePlanDTO) (*outputs.CreatePlanResponse, error)
+	UpdatePlan(planId string, input inputs.UpdatePlanDTO) (*outputs.PlanResponse, error)
+	DeletePlan(planId string) error
+	ExportPlans(input inputs.ExportPlansInput) ([]byte, error)
+	GetCoupons(page, pageLimit int) (*outputs.CouponsResponse, error)
+	GetCoupon(couponId string) (*outputs.CouponResponse, error)
+	CreateCoupon(input inputs.CreateCouponDTO) (*outputs.CouponResponse, error)
+	DeleteCoupon(couponId string) error
+	GetSubscriptions(input inputs.ListSubscriptionsInput) (*outputs.SubscriptionsResponse, error)
+	CreateSubscription(input inputs.CreateSubscriptionDTO) (*outputs.SubscriptionResponse, error)
+	UpdateSubscription(subscriptionId string, input inputs.UpdateSubscriptionDTO) (*outputs.SubscriptionResponse, error)
+	CancelSubscription(subscriptionId string) (*outputs.SubscriptionResponse, error)
+	PauseSubscription(subscriptionId string, input inputs.PauseSubscriptionDTO) (*outputs.SubscriptionResponse, error)
+	ResumeSubscription(subscriptionId string) (*outputs.SubscriptionResponse, error)
+	DeleteSubscription(subscriptionId string) error
+	ExportSubscriptions(input inputs.ExportSubscriptionsInput) ([]byte, error)
 }
 
 type PayarcClientImpl struct {
-	ctx           context.Context
-	client        *client.Client
-	apiBaseUrl    string
-	prefix        string
-	chargesPath   string
-	customersPath string
-	cardsPath     string
-	tokensPath    string
+	ctx                 context.Context
+	client              *client.Client
+	apiBaseUrl          string
+	prefix              string
+	chargesPath         string
+	customersPath       string
+	cardsPath           string
+	tokensPath          string
+	plansPath           string
+	discountsPath       string
+	subscriptionsPath   string
+	dashboardExportPath string
 }
 
 type PayarcClientOptions struct {
@@ -53,13 +77,17 @@ type PayarcClientOptions struct {
 
 func NewPayarcClient(ctx context.Context, options PayarcClientOptions) PayarcClient {
 	return &PayarcClientImpl{
-		ctx:           ctx,
-		client:        NewClient(options),
-		prefix:        options.PayarcPrefix,
-		chargesPath:   "charges",
-		customersPath: "customers",
-		cardsPath:     "cards",
-		tokensPath:    "tokens",
+		ctx:                 ctx,
+		client:              NewClient(options),
+		prefix:              options.PayarcPrefix,
+		chargesPath:         "charges",
+		customersPath:       "customers",
+		cardsPath:           "cards",
+		tokensPath:          "tokens",
+		plansPath:           "plans",
+		discountsPath:       "discounts",
+		subscriptionsPath:   "subscriptions",
+		dashboardExportPath: "dashboard-export",
 	}
 }
 
@@ -369,4 +397,162 @@ func (p *PayarcClientImpl) CreateCardFromToken(input outputs.Token) (*outputs.Ca
 		}
 	}
 	return card, nil
+}
+
+func (p *PayarcClientImpl) GetPlans(page, pageLimit int) (*outputs.PlansResponse, error) {
+	body := map[string]interface{}{
+		"page":  page,
+		"limit": pageLimit,
+	}
+
+	res := &outputs.PlansResponse{}
+	if err := p.client.Get(p.plansPath, nil, res, body); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) GetPlan(planId string) (*outputs.PlanResponse, error) {
+	path := fmt.Sprintf("%s/%s", p.plansPath, planId)
+	res := &outputs.PlanResponse{}
+	if err := p.client.Get(path, nil, res, nil); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) CreatePlan(input inputs.CreatePlanDTO) (*outputs.CreatePlanResponse, error) {
+	res := &outputs.CreatePlanResponse{}
+	if err := p.client.PostJSON(p.plansPath, input, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) UpdatePlan(planId string, input inputs.UpdatePlanDTO) (*outputs.PlanResponse, error) {
+	path := fmt.Sprintf("%s/%s", p.plansPath, planId)
+	res := &outputs.PlanResponse{}
+	if err := p.client.PatchJSON(path, input, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) DeletePlan(planId string) error {
+	path := fmt.Sprintf("%s/%s", p.plansPath, planId)
+	return p.client.DeleteJSON(path, nil, nil)
+}
+
+// ExportPlans exports plans to an Excel file. The returned bytes contain the
+// file contents, which can be saved directly to disk.
+func (p *PayarcClientImpl) ExportPlans(input inputs.ExportPlansInput) ([]byte, error) {
+	if len(input.SelectedColumns) == 0 {
+		return nil, errors.New("payarc: selected_columns is required")
+	}
+
+	path := fmt.Sprintf("%s/plan", p.dashboardExportPath)
+	return p.client.GetRaw(path, utils.StructToQuery(input))
+}
+
+func (p *PayarcClientImpl) GetCoupons(page, pageLimit int) (*outputs.CouponsResponse, error) {
+	body := map[string]interface{}{
+		"page":  page,
+		"limit": pageLimit,
+	}
+
+	res := &outputs.CouponsResponse{}
+	if err := p.client.Get(p.discountsPath, nil, res, body); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) GetCoupon(couponId string) (*outputs.CouponResponse, error) {
+	path := fmt.Sprintf("%s/%s", p.discountsPath, couponId)
+	res := &outputs.CouponResponse{}
+	if err := p.client.Get(path, nil, res, nil); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) CreateCoupon(input inputs.CreateCouponDTO) (*outputs.CouponResponse, error) {
+	res := &outputs.CouponResponse{}
+	if err := p.client.PostJSON(p.discountsPath, input, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) DeleteCoupon(couponId string) error {
+	path := fmt.Sprintf("%s/%s", p.discountsPath, couponId)
+	return p.client.DeleteJSON(path, nil, nil)
+}
+
+func (p *PayarcClientImpl) GetSubscriptions(input inputs.ListSubscriptionsInput) (*outputs.SubscriptionsResponse, error) {
+	res := &outputs.SubscriptionsResponse{}
+	if err := p.client.Get(p.subscriptionsPath, utils.StructToQuery(input), res, nil); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) CreateSubscription(input inputs.CreateSubscriptionDTO) (*outputs.SubscriptionResponse, error) {
+	res := &outputs.SubscriptionResponse{}
+	if err := p.client.PostJSON(p.subscriptionsPath, input, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) UpdateSubscription(subscriptionId string, input inputs.UpdateSubscriptionDTO) (*outputs.SubscriptionResponse, error) {
+	path := fmt.Sprintf("%s/%s", p.subscriptionsPath, subscriptionId)
+	res := &outputs.SubscriptionResponse{}
+	if err := p.client.PatchJSON(path, input, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) CancelSubscription(subscriptionId string) (*outputs.SubscriptionResponse, error) {
+	path := fmt.Sprintf("%s/%s/cancel", p.subscriptionsPath, subscriptionId)
+	res := &outputs.SubscriptionResponse{}
+	if err := p.client.PatchJSON(path, struct{}{}, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) PauseSubscription(subscriptionId string, input inputs.PauseSubscriptionDTO) (*outputs.SubscriptionResponse, error) {
+	path := fmt.Sprintf("%s/%s/pause", p.subscriptionsPath, subscriptionId)
+	res := &outputs.SubscriptionResponse{}
+	if err := p.client.PostJSON(path, input, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) ResumeSubscription(subscriptionId string) (*outputs.SubscriptionResponse, error) {
+	path := fmt.Sprintf("%s/%s/resume", p.subscriptionsPath, subscriptionId)
+	res := &outputs.SubscriptionResponse{}
+	if err := p.client.PostJSON(path, struct{}{}, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (p *PayarcClientImpl) DeleteSubscription(subscriptionId string) error {
+	path := fmt.Sprintf("%s/%s", p.subscriptionsPath, subscriptionId)
+	return p.client.DeleteJSON(path, nil, nil)
+}
+
+// ExportSubscriptions exports subscriptions to an Excel file. The returned
+// bytes contain the file contents, which can be saved directly to disk.
+func (p *PayarcClientImpl) ExportSubscriptions(input inputs.ExportSubscriptionsInput) ([]byte, error) {
+	if len(input.SelectedColumns) == 0 {
+		return nil, errors.New("payarc: selected_columns is required")
+	}
+
+	path := fmt.Sprintf("%s/subscription", p.dashboardExportPath)
+	return p.client.GetRaw(path, utils.StructToQuery(input))
 }
