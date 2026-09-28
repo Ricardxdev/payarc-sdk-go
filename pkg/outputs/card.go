@@ -29,10 +29,13 @@ func (cs CardSource) Valid() bool {
 type CardBrand string
 
 var (
-	CardBrandVisa            CardBrand = "V"
-	CardBrandMastercard      CardBrand = "M"
-	CardBrandDiscover        CardBrand = "D"
-	CardBrandAmericanExpress CardBrand = "A"
+	CardBrandVisa               CardBrand = "V"
+	CardBrandMastercard         CardBrand = "M"
+	CardBrandDiscover           CardBrand = "R"
+	CardBrandDiscoverOld        CardBrand = "D"
+	CardBrandAmericanExpress    CardBrand = "X"
+	CardBrandAmericanExpressOld CardBrand = "A"
+	CardBrandJCB                CardBrand = "J"
 )
 
 type CardsResponse struct {
