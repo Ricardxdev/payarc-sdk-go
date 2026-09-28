@@ -312,3 +312,198 @@ func TestCancelSubscriptionResponseUnmarshal(t *testing.T) {
 		t.Errorf("expected canceled_at 1726163436, got %v", res.Data.CanceledAt)
 	}
 }
+
+func TestVoidChargeResponseUnmarshal(t *testing.T) {
+	payload := `{
+		"data": {
+			"object": "Charge",
+			"id": "DLbnOBbBDWMbbOoM",
+			"amount": 99,
+			"amount_approved": 99,
+			"amount_refunded": 0,
+			"amount_captured": 500,
+			"amount_voided": 500,
+			"application_fee_amount": 0,
+			"tip_amount": 20,
+			"payarc_fees": 0,
+			"type": "Sale",
+			"customer_email": "eric.yulfo@payarc.com",
+			"net_amount": 0,
+			"captured": 1,
+			"is_refunded": 0,
+			"status": "void",
+			"auth_code": "TAS697",
+			"failure_code": null,
+			"failure_message": null,
+			"charge_description": null,
+			"kount_details": "",
+			"kount_status": "",
+			"statement_description": "Eric's Energy Drinks",
+			"under_review": 0,
+			"created_at": 1725459426,
+			"updated_at": 1725461016,
+			"card_level": "LEVEL1",
+			"void_reason": "requested_by_customer",
+			"void_description": "Customer requested order cancellation",
+			"card": {
+				"data": {
+					"object": "Card",
+					"id": "vmy905NNNm5y0M2L",
+					"card_source": "PHONE",
+					"is_default": 1,
+					"exp_month": "12",
+					"exp_year": "2025",
+					"is_verified": 1,
+					"brand": "V",
+					"last4digit": "5439",
+					"first6digit": 401200
+				}
+			}
+		},
+		"meta": {
+			"include": [
+				"review",
+				"transaction_metadata"
+			],
+			"custom": []
+		}
+	}`
+
+	res := &ResponseCharge{}
+	if err := json.Unmarshal([]byte(payload), res); err != nil {
+		t.Fatalf("unexpected error unmarshaling void charge response: %v", err)
+	}
+
+	if res.Data.ID != "DLbnOBbBDWMbbOoM" {
+		t.Errorf("expected charge ID DLbnOBbBDWMbbOoM, got %s", res.Data.ID)
+	}
+	if res.Data.Status != "void" {
+		t.Errorf("expected status void, got %s", res.Data.Status)
+	}
+	if res.Data.AmountVoided != 500 {
+		t.Errorf("expected amount_voided 500, got %d", res.Data.AmountVoided)
+	}
+	if res.Data.VoidReason == nil || *res.Data.VoidReason != "requested_by_customer" {
+		t.Errorf("expected void_reason requested_by_customer, got %v", res.Data.VoidReason)
+	}
+	if res.Data.VoidDescription == nil || *res.Data.VoidDescription != "Customer requested order cancellation" {
+		t.Errorf("expected void_description Customer requested order cancellation, got %v", res.Data.VoidDescription)
+	}
+	if len(res.Metadata.Include) != 2 {
+		t.Errorf("expected 2 meta includes, got %d", len(res.Metadata.Include))
+	}
+}
+
+func TestCaptureChargeResponseUnmarshal(t *testing.T) {
+	payload := `{
+		"data": {
+			"object": "Charge",
+			"id": "DMWbOLMyDnLMyOBX",
+			"amount": 99,
+			"amount_approved": 99,
+			"amount_refunded": 0,
+			"amount_captured": 500,
+			"amount_voided": 0,
+			"application_fee_amount": 0,
+			"tip_amount": 20,
+			"payarc_fees": 0,
+			"type": "Sale",
+			"customer_email": "eric.yulfo@payarc.com",
+			"net_amount": 500,
+			"captured": 1,
+			"is_refunded": 0,
+			"status": "submitted_for_settlement",
+			"auth_code": "TAS776",
+			"statement_description": "Eric's Energy Drinks",
+			"created_at": 1725459517,
+			"updated_at": 1725459705,
+			"card": {
+				"data": {
+					"object": "Card",
+					"id": "vmy905NNNm5y0M2L",
+					"card_source": "PHONE",
+					"is_default": 1,
+					"brand": "V",
+					"last4digit": "5439"
+				}
+			}
+		},
+		"meta": {
+			"include": [
+				"review"
+			],
+			"custom": []
+		}
+	}`
+
+	res := &ResponseCharge{}
+	if err := json.Unmarshal([]byte(payload), res); err != nil {
+		t.Fatalf("unexpected error unmarshaling capture charge response: %v", err)
+	}
+
+	if res.Data.ID != "DMWbOLMyDnLMyOBX" {
+		t.Errorf("expected charge ID DMWbOLMyDnLMyOBX, got %s", res.Data.ID)
+	}
+	if res.Data.Status != "submitted_for_settlement" {
+		t.Errorf("expected status submitted_for_settlement, got %s", res.Data.Status)
+	}
+	if res.Data.AmountCaptured != 500 {
+		t.Errorf("expected amount_captured 500, got %d", res.Data.AmountCaptured)
+	}
+	if res.Data.TipAmount != 20 {
+		t.Errorf("expected tip_amount 20, got %d", res.Data.TipAmount)
+	}
+	if !res.Data.Captured.AsBool() {
+		t.Errorf("expected captured to be true")
+	}
+}
+
+func TestRefundChargeResponseUnmarshal(t *testing.T) {
+	payload := `{
+		"data": {
+			"object": "Charge",
+			"id": "DLbnOBbBDWMRROoM",
+			"amount": 99,
+			"amount_approved": 99,
+			"amount_refunded": 99,
+			"amount_captured": 99,
+			"amount_voided": 0,
+			"application_fee_amount": 0,
+			"tip_amount": 0,
+			"payarc_fees": 0,
+			"type": "Sale",
+			"customer_email": "eric.yulfo@payarc.com",
+			"net_amount": 0,
+			"captured": 1,
+			"is_refunded": 1,
+			"status": "refunded",
+			"auth_code": "TAS843",
+			"statement_description": "Eric's Energy Drinks",
+			"refund_reason": "requested_by_customer",
+			"refund_description": "Product return",
+			"created_at": 1725461676,
+			"updated_at": 1725461750
+		},
+		"meta": {
+			"include": [
+				"review"
+			],
+			"custom": []
+		}
+	}`
+
+	res := &ResponseCharge{}
+	if err := json.Unmarshal([]byte(payload), res); err != nil {
+		t.Fatalf("unexpected error unmarshaling refund charge response: %v", err)
+	}
+
+	if res.Data.ID != "DLbnOBbBDWMRROoM" {
+		t.Errorf("expected charge ID DLbnOBbBDWMRROoM, got %s", res.Data.ID)
+	}
+	if res.Data.AmountRefunded != 99 {
+		t.Errorf("expected amount_refunded 99, got %d", res.Data.AmountRefunded)
+	}
+	if !res.Data.IsRefunded.AsBool() {
+		t.Errorf("expected is_refunded to be true")
+	}
+}

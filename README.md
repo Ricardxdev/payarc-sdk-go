@@ -4,7 +4,7 @@ A Go package for working with PayArc. This package provides a client to interact
 
 ## Features
 
-- Create, retrieve, and list charges
+- Create, retrieve, list, capture, void, and refund charges
 - Create and fetch customers
 - Create cards and tokens
 - Create, retrieve, list, update, delete, and export plans
@@ -56,6 +56,32 @@ func main() {
     }
     fmt.Println("Charge:", chargeResponse)
 }
+```
+
+### Charges
+
+```go
+// Capture an existing uncaptured charge
+amount := 1000
+tip := 200
+captured, err := payArcClient.CaptureCharge("ch_123", inputs.CaptureChargeDTO{
+    Amount:    &amount,
+    TipAmount: &tip,
+})
+
+// Void an existing charge
+voided, err := payArcClient.VoidCharge("ch_123", inputs.VoidChargeDTO{
+    Reason:          extra.VoidReasonRequestedByCustomer,
+    VoidDescription: "Customer canceled order",
+})
+
+// Refund an existing settled charge
+refundAmount := 1000
+refunded, err := payArcClient.RefundCharge("ch_123", inputs.RefundChargeDTO{
+    Amount:      &refundAmount,
+    Reason:      extra.RefundReasonRequestedByCustomer,
+    Description: "Return goods",
+})
 ```
 
 ### Plans

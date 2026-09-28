@@ -6,13 +6,13 @@ import (
 	"github.com/Ricardxdev/payarc-sdk-go/pkg/extra"
 )
 
-type RefundReason string
+type RefundReason = extra.RefundReason
 
 var (
-	RefundReasonRequestedByCustomer RefundReason = "requested_by_customer"
-	RefundReasonFraudulent          RefundReason = "fraudulent"
-	RefundReasonDuplicate           RefundReason = "duplicate"
-	RefundReasonOther               RefundReason = "other"
+	RefundReasonRequestedByCustomer = extra.RefundReasonRequestedByCustomer
+	RefundReasonFraudulent          = extra.RefundReasonFraudulent
+	RefundReasonDuplicate           = extra.RefundReasonDuplicate
+	RefundReasonOther               = extra.RefundReasonOther
 )
 
 type RefundStatus string

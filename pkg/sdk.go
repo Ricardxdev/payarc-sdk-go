@@ -16,6 +16,9 @@ type PayarcClient interface {
 	GetChargesByDate(startDate, endDate int64) ([]outputs.Charge, error)
 	GetCharge(chargeID string) (*outputs.ResponseCharge, error)
 	CreateCharge(input inputs.ChargeInput) (*outputs.CreateChargeResponse, error)
+	CaptureCharge(chargeId string, input inputs.CaptureChargeDTO) (*outputs.ResponseCharge, error)
+	VoidCharge(chargeId string, input inputs.VoidChargeDTO) (*outputs.ResponseCharge, error)
+	RefundCharge(chargeId string, input inputs.RefundChargeDTO) (*outputs.ResponseCharge, error)
 	GetCustomer(customerId string) (*outputs.CustomerResponse, error)
 	GetCustomers(page, pageLimit int) (*outputs.CustomersResponse, error)
 	CreateCustomer(input inputs.CreateCustomerDTO) (*outputs.CustomerResponse, error)
@@ -168,6 +171,33 @@ func (p *PayarcClientImpl) CreateCharge(input inputs.ChargeInput) (*outputs.Crea
 	response := &outputs.CreateChargeResponse{}
 	err := p.client.PostJSON(p.chargesPath, input, response)
 	if err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (p *PayarcClientImpl) CaptureCharge(chargeId string, input inputs.CaptureChargeDTO) (*outputs.ResponseCharge, error) {
+	path := fmt.Sprintf("%s/%s/capture", p.chargesPath, chargeId)
+	response := &outputs.ResponseCharge{}
+	if err := p.client.PostJSON(path, input, response); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (p *PayarcClientImpl) VoidCharge(chargeId string, input inputs.VoidChargeDTO) (*outputs.ResponseCharge, error) {
+	path := fmt.Sprintf("%s/%s/void", p.chargesPath, chargeId)
+	response := &outputs.ResponseCharge{}
+	if err := p.client.PostJSON(path, input, response); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (p *PayarcClientImpl) RefundCharge(chargeId string, input inputs.RefundChargeDTO) (*outputs.ResponseCharge, error) {
+	path := fmt.Sprintf("%s/%s/refunds", p.chargesPath, chargeId)
+	response := &outputs.ResponseCharge{}
+	if err := p.client.PostJSON(path, input, response); err != nil {
 		return nil, err
 	}
 	return response, nil

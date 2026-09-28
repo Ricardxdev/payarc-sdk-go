@@ -51,7 +51,8 @@ type ChargeResult struct {
 }
 
 type ResponseCharge struct {
-	Data Charge `json:"data"`
+	Data     Charge   `json:"data"`
+	Metadata Metadata `json:"meta,omitempty"`
 }
 
 type ResponseCharges struct {

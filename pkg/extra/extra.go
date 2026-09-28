@@ -15,6 +15,26 @@ var (
 	ChargeStatusVoid                   ChargeStatus = "void"
 )
 
+// VoidReason represents the reason for voiding a transaction.
+type VoidReason string
+
+var (
+	VoidReasonRequestedByCustomer VoidReason = "requested_by_customer"
+	VoidReasonFraudulent          VoidReason = "fraudulent"
+	VoidReasonDuplicate           VoidReason = "duplicate"
+	VoidReasonOther               VoidReason = "other"
+)
+
+// RefundReason represents the reason for refunding a transaction.
+type RefundReason string
+
+var (
+	RefundReasonRequestedByCustomer RefundReason = "requested_by_customer"
+	RefundReasonFraudulent          RefundReason = "fraudulent"
+	RefundReasonDuplicate           RefundReason = "duplicate"
+	RefundReasonOther               RefundReason = "other"
+)
+
 type Boolean uint8
 
 var (
